@@ -24,6 +24,7 @@ pip install cursor xxhash
 ```
 
 Once the dependencies are installed, you can run the KSOLVER X script:
+<pre>
 bloom.py
 bits = 46        # range upper bits
 count = 20000000 # number of bloom entries
@@ -34,7 +35,7 @@ pub = '02b560fa090d174209b122923c5e9968153066cd84707cbecf22dbfd11e15f0ec3' # pub
 bits = 46    # range upper bits
 n = 20000000 # number of bloom entries
 c = 4        # number of CPU cores to use
-
+</pre>
 
 ## How it Works
 
