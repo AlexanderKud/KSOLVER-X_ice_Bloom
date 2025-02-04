@@ -24,7 +24,6 @@ end = bits
 st = time.time()
 
 def pr():
-    os.system('cls||clear')
     print(f'[+] Creating BloomFilter')
     print(f'[+] Items: {count}')
     print(f'[+] Cores: {core}')
