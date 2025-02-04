@@ -1,14 +1,16 @@
 # KSOLVER-X
-Find PrivateKey of corresponding Pubkey using random xpoint search
+Find PrivateKey of corresponding Pubkey using random xpoint search<br>
 original code : https://github.com/pianist-coder/KSOLVER-X
 
-KSOLVER X is a tool for solving private keys in the Bitcoin ecosystem. It is designed to efficiently search for private keys that correspond to a given public key.
+KSOLVER X is a tool for solving private keys in the Bitcoin secp256k1 curve.
 
 ## Features
 
 - Utilizes the secp256k1 elliptic curve python library by iceland2k14 for efficient and fast ec operations
+- btc.point_sequential_increment(n, a_)) uses a lot of RAM
+- btc.point_sequential_decrement(n, a_)) uses a lot of RAM
 - Supports parallel processing using multiple CPU cores for faster computation
-- Provides detailed progress information, including estimated probability of finding the key
+- Each CPU Core uses a separate Process with Python Interpreter Instance
 
 ## Usage
 
@@ -36,13 +38,3 @@ bits = 46    # range upper bits
 n = 20000000 # number of bloom entries
 c = 4        # number of CPU cores to use
 </pre>
-
-## How it Works
-
-KSOLVER X uses a combination of techniques to efficiently search for private keys:
-
-1. **Bloom Filter**: The script uses a Bloom filter to quickly check if a potential private key matches the given public key. This allows the script to avoid performing expensive cryptographic operations for keys that are unlikely to match.
-2. **Parallel Processing**: The script utilizes multiple CPU cores to search for private keys in parallel, significantly speeding up the computation.
-3. **Incremental and Decremental Search**: The script performs both incremental and decremental searches around the base private key, increasing the chances of finding the correct key.
-4. **Progress Reporting**: The script provides detailed progress information, including the estimated probability of finding the key, the current search speed, and the elapsed time.
-
