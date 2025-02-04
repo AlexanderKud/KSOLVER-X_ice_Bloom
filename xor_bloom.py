@@ -85,9 +85,9 @@ def bloom_create(counter, r, match):
         temp = generate_random_bloom(start, end)
         save_data(temp, filebase)
         with counter.get_lock(): counter.value += 10000
-        if counter.value % 1000000 == 0:
+        if counter.value % 100000 == 0:
             speedup(st, counter.value)
-        if counter.value == count - (core-1)*10000:
+        if counter.value == count:
             print(f'\n[+] Writing Bloomfilter to {bloom_filter_name}')
             secp256k1.dump_xor_file(bloom_filter_name, _bits, _hashes, _xf, _fp, _elem)
             match.set()
