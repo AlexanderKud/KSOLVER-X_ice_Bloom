@@ -118,7 +118,6 @@ def process_collision(item, i, counter, fc, match, queue, r, basefile, sign, ste
         with open('FOUND.txt', 'a') as found:
             found.write(f'{a.hex()};{offset:x}\n')
         print(f'[+] Core#{r} solved key by {sign} with step {step:x}')
-        print(f'[+] Private Key: {hex(offset)}')
         match.set()
         queue.put_nowait(offset)
     else:
