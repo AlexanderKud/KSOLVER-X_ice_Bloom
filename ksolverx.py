@@ -1,16 +1,16 @@
 # original code : https://github.com/pianist-coder/KSOLVER-X
 # pip install xxhash cursor
 import sys, time, xxhash, os
-import secp256k1 as btc
+import secp256k1
 import random
-from multiprocessing import Event, Process, Queue, Value, cpu_count
+from multiprocessing import Event, Process, Queue, Value, cpu_count, active_children
 from math import log2
 import cursor
 
 cursor.hide()
 
 pub = '02b560fa090d174209b122923c5e9968153066cd84707cbecf22dbfd11e15f0ec3'
-a = btc.pub2upub(pub)
+a = secp256k1.pub2upub(pub)
 bits = 46
 blname = f'{bits}.bf'
 basefile = f'{bits}.txt'
@@ -18,7 +18,7 @@ n = 20000000
 c = 4
 l = n
 
-_bits, _hashes, _bf, _fp, _elem = btc.read_bloom_file(blname)
+_bits, _hashes, _bf, _fp, _elem = secp256k1.read_bloom_file(blname)
 
 st = time.time()
 start = 2 ** (bits - 1)
@@ -28,7 +28,7 @@ def p_2(num):
     return f'{log2(num):.2f}'
 
 def pr():
-    print(f'[+] Pubkey:      {btc.point_to_cpub(a).upper()}')
+    print(f'[+] Pubkey:      {secp256k1.point_to_cpub(a).upper()}')
     print(f'[+] Bloom items: {n}')
     print(f'[+] Key range:   {bits - 1} bits')
     print(f'[+] Cores:       {c}')
@@ -74,31 +74,36 @@ def key_solver(cores="all"):
     match = Event()
     queue = Queue()
     workers = []
+
     for r in range(cores):
         p = Process(target=solve_keys, args=(counter, fc, match, queue, r))
         workers.append(p)
         p.start()
-    for worker in workers:
-        worker.join()
+
+    if match.is_set():
+        active = active_children()
+        for child in active:
+            child.terminate()
+
     private_key = queue.get()
-    print(f'\n[+] Private Key: {hex(private_key)}\n[+] Address:     {btc.privatekey_to_address(0, True, private_key)}\n[+] WIF:         {btc.btc_pvk_to_wif(private_key)}\n')
+    print(f'\n[+] Private Key: {hex(private_key)}\n[+] Address:     {secp256k1.privatekey_to_address(0, True, private_key)}\n[+] WIF:         {secp256k1.btc_pvk_to_wif(private_key)}\n')
     print(f'[+] Time taken {time.time() - st:.2f} sec')
 
 def solve_keys(counter, fc, match, queue, r):
     while not match.is_set():
         step = random.randint(2**(bits-5), 2**(bits-4))
      #   step = random.randint(2**(rng-6), 2**(rng-5)) ### do not go beyond the range
-        a_ = btc.point_subtraction(a, btc.scalar_multiplication(step))
+        a_ = secp256k1.point_subtraction(a, secp256k1.scalar_multiplication(step))
      #   with open('possible.txt', 'a') as found: ### you may save result xpoints for future
      #       found.write(f'{a_.hex()[2:66]} # + {step:x}\n')
         with counter.get_lock():
             counter.value += n*2
-        for i1, item in enumerate(chunks(btc.point_sequential_increment(n, a_))):
-            if btc.check_in_bloom(item, _bits, _hashes, _bf):
+        for i1, item in enumerate(chunks(secp256k1.point_sequential_increment(n, a_))):
+            if secp256k1.check_in_bloom(item, _bits, _hashes, _bf):
                 process_collision(item, i1 + 1, counter, fc, match, queue, r, basefile, "addition", step)
                 if match.is_set(): return
-        for i2, item in enumerate(chunks(btc.point_sequential_decrement(n, a_))):
-            if btc.check_in_bloom(item, _bits, _hashes, _bf):
+        for i2, item in enumerate(chunks(secp256k1.point_sequential_decrement(n, a_))):
+            if secp256k1.check_in_bloom(item, _bits, _hashes, _bf):
                 process_collision(item, i2 + 1, counter, fc, match, queue, r, basefile, "subtraction", step)
                 if match.is_set(): return
         if counter.value % (n*c*2) == 0:
