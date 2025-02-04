@@ -3,7 +3,7 @@
 import sys, time, xxhash, os
 import secp256k1
 import random
-from multiprocessing import Event, Process, Queue, Value, cpu_count, active_children
+from multiprocessing import Event, Process, Queue, Value, cpu_count
 from math import log2
 import cursor
 
@@ -79,11 +79,6 @@ def key_solver(cores="all"):
         p = Process(target=solve_keys, args=(counter, fc, match, queue, r))
         workers.append(p)
         p.start()
-
-    if match.is_set():
-        active = active_children()
-        for child in active:
-            child.terminate()
 
     private_key = queue.get()
     print(f'\n[+] Private Key: {hex(private_key)}\n[+] Address:     {secp256k1.privatekey_to_address(0, True, private_key)}\n[+] WIF:         {secp256k1.btc_pvk_to_wif(private_key)}\n')
