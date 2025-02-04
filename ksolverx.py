@@ -80,14 +80,13 @@ def key_solver(cores="all"):
         workers.append(p)
         p.start()
 
-    if match.is_set():
-        active = active_children()
-        for child in active:
-            child.terminate()
-
     private_key = queue.get()
     print(f'\n[+] Private Key: {hex(private_key)}\n[+] Address:     {secp256k1.privatekey_to_address(0, True, private_key)}\n[+] WIF:         {secp256k1.btc_pvk_to_wif(private_key)}\n')
     print(f'[+] Time taken {time.time() - st:.2f} sec')
+    active = active_children()
+    for child in active:
+        child.kill()
+    os._exit(0)
 
 def solve_keys(counter, fc, match, queue, r):
     while not match.is_set():
