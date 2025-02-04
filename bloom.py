@@ -77,7 +77,6 @@ def save_data(data, filename):
     with open(filename, "a") as f:
         for item, value in data.items():
             secp256k1.add_to_bloom(item, _bits, _hashes, _bf)
-            #print(secp256k1.check_in_bloom(item, _bits, _hashes, _bf))
             f.write(f'{value};{xxhash.xxh64(item).hexdigest()}\n')
             
 def bloom_create(counter, r, match):
