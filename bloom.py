@@ -11,7 +11,7 @@ bits = 46
 count = 20000000
 bloom_filter_name = f'{bits}.bf'
 filebase = f'{bits}.txt'
-core = 4
+core = 6
 
 _elem = (count * 2)
 _fp = 0.000001
@@ -76,6 +76,7 @@ def save_data(data, filename):
     with open(filename, "a") as f:
         for item, value in data.items():
             secp256k1.add_to_bloom(item, _bits, _hashes, _bf)
+            #print(secp256k1.check_in_bloom(item, _bits, _hashes, _bf))
             f.write(f'{value};{xxhash.xxh64(item).hexdigest()}\n')
             
 def bloom_create(counter, r, match):

@@ -7,7 +7,7 @@ import cursor
 
 cursor.hide()
 
-bits = 47
+bits = 50
 count = 20000000
 bloom_filter_name = f'{bits}.xf'
 filebase = f'{bits}.txt'
@@ -70,7 +70,7 @@ def bloom_start(cores='all'):
             worker.join()
     except(KeyboardInterrupt, SystemExit):
         exit('\nSIGINT or CTRL-C detected. Exiting gracefully. BYE')
-    sys.stdout.write('[+] Time taken {0:.2f} sec\n'.format(time.time() - st))
+    sys.stdout.write('[+] Time taken {0:.2f} sec'.format(time.time() - st))
 
 def save_data(data, filename):
     with open(filename, "a") as f:
