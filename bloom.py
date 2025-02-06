@@ -1,7 +1,7 @@
 # original code : https://github.com/pianist-coder/KSOLVER-X
 # pip install xxhash cursor
 import os, sys, xxhash, random, time
-import secp256k1
+import secp256k1 #https://github.com/iceland2k14/secp256k1
 from multiprocessing import Process, cpu_count, Value, Event
 import cursor
 
