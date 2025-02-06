@@ -7,6 +7,8 @@ KSOLVER X is a tool for solving private keys in the Bitcoin secp256k1 curve.
 ## Features
 
 - Utilizes the secp256k1 elliptic curve python library by iceland2k14 for efficient and fast ec operations
+- Added to secp256k1.py add_to_bloom function to add individual items
+- Added to secp256k1.py add_to_xor function to add individual items
 - secp256k1.point_sequential_increment(n, a_)) uses a lot of RAM
 - secp256k1.point_sequential_decrement(n, a_)) uses a lot of RAM
 - Supports parallel processing using multiple CPU cores for faster computation
