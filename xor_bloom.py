@@ -85,7 +85,7 @@ def bloom_create(counter, r, match):
         temp = generate_random_bloom(start, end)
         save_data(temp, filebase)
         with counter.get_lock(): counter.value += 10000
-        if counter.value % 100000 == 0:
+        if counter.value % 200000 == 0:
             speedup(st, counter.value)
         if counter.value == count:
             print(f'\n[+] Writing Bloomfilter to {bloom_filter_name}')
